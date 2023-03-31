@@ -1,47 +1,28 @@
 # GettingTooAttached
 
-Simple example plugin for Dalamud.
+This plugin is design to get you the Getting Too Attached achievements.
 
-This is not designed to be the simplest possible example, but it is also not designed to cover everything you might want to do. For more detailed questions, come ask in [the Discord](https://discord.gg/3NMcUV5).
+Right now it's not user friendly/super intuitive, but I'll work on that and update this ReadMe accordingly.
 
-## Main Points
+To get it to work:
 
--   Simple functional plugin
-    -   Slash command
-    -   Main UI
-    -   Settings UI
-    -   Image loading
-    -   Plugin json
--   Simple, slightly-improved plugin configuration handling
--   Project organization
-    -   Copies all necessary plugin files to the output directory
-        -   Does not copy dependencies that are provided by dalamud
-        -   Output directory can be zipped directly and have exactly what is required
-    -   Hides data files from visual studio to reduce clutter
-        -   Also allows having data files in different paths than VS would usually allow if done in the IDE directly
+1. Once installed, have a piece of gear in your inventory and a materia that will not overcap a stat. The plugin does not behave correctly if you overcap.
 
-The intention is less that any of this is used directly in other projects, and more to show how similar things can be done.
+2. Open the plugin with the command `/gta`, then hit "show settings".
 
-## To Use
+3. Tick the checkbox to start the plugin.
 
-### Building
+### NOTES
 
-1. Open up `GettingTooAttached.sln` in your C# editor of choice (likely [Visual Studio 2022](https://visualstudio.microsoft.com) or [JetBrains Rider](https://www.jetbrains.com/rider/)).
-2. Build the solution. By default, this will build a `Debug` build, but you can switch to `Release` in your IDE.
-3. The resulting plugin can be found at `GettingTooAttached/bin/x64/Debug/GettingTooAttached.dll` (or `Release` if appropriate.)
+-   You must start the plugin without the meld menu up to begin with.
+-   Disable the plugin via unchecking the checkbox.
+-   If you wish to resume, it'll start on the last step you were on when you stopped. Hit the "reset MeldState" button to set it back to the start and make sure all menus are closed again.
+-   This will loop endlessly. It does not check for when you've gotten the achievement(s).
 
-### Activating in-game
+### REPO
 
-1. Launch the game and use `/xlsettings` in chat or `xlsettings` in the Dalamud Console to open up the Dalamud settings.
-    - In here, go to `Experimental`, and add the full path to the `GettingTooAttached.dll` to the list of Dev Plugin Locations.
-2. Next, use `/xlplugins` (chat) or `xlplugins` (console) to open up the Plugin Installer.
-    - In here, go to `Dev Tools > Installed Dev Plugins`, and the `GettingTooAttached` should be visible. Enable it.
-3. You should now be able to use `/pmycommand` (chat) or `pmycommand` (console)!
+working on it
 
-Note that you only need to add it to the Dev Plugin Locations once (Step 1); it is preserved afterwards. You can disable, enable, or load your plugin on startup through the Plugin Installer.
+### Special Thanks
 
-### Reconfiguring for your own uses
-
-Basically, just replace all references to `GettingTooAttached` in all of the files and filenames with your desired name. You'll figure it out 😁
-
-Dalamud will load the JSON file (by default, `GettingTooAttached/GettingTooAttached.json`) next to your DLL and use it for metadata, including the description for your plugin in the Plugin Installer. Make sure to update this with information relevant to _your_ plugin!
+I barely knew C# before starting this and knew nothing about the inner workings of dalamud. Wouldn't've been possible without the teachings/guidance of Taurenkey and Ravicale.
