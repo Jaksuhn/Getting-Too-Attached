@@ -1,0 +1,9 @@
+{
+    "Author": "snowbot",
+    "Name": "Getting Too Attached",
+    "Punchline": "Completes the Getting Too Attached achievements for you",
+    "Description": "",
+    "InternalName": "GettingTooAttached",
+    "ApplicableVersion": "any",
+    "Tags": ["achievements", "plugin", "utility"]
+}

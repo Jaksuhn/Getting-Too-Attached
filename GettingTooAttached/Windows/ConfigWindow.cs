@@ -3,14 +3,14 @@ using System.Numerics;
 using Dalamud.Interface.Windowing;
 using ImGuiNET;
 
-namespace SamplePlugin.Windows;
+namespace GettingTooAttached.Windows;
 
 public class ConfigWindow : Window, IDisposable
 {
     private Configuration Configuration;
 
     public ConfigWindow(Plugin plugin) : base(
-        "A Wonderful Configuration Window",
+        "Enable Plugin",
         ImGuiWindowFlags.NoResize | ImGuiWindowFlags.NoCollapse | ImGuiWindowFlags.NoScrollbar |
         ImGuiWindowFlags.NoScrollWithMouse)
     {
@@ -26,7 +26,7 @@ public class ConfigWindow : Window, IDisposable
     {
         // can't ref a property, so use a local copy
         var configValue = this.Configuration.SomePropertyToBeSavedAndWithADefault;
-        if (ImGui.Checkbox("Random Config Bool", ref configValue))
+        if (ImGui.Checkbox("Start Looping", ref configValue))
         {
             this.Configuration.SomePropertyToBeSavedAndWithADefault = configValue;
             // can save immediately on change, if you don't want to provide a "Save and Close" button
