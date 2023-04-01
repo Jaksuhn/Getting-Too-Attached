@@ -85,7 +85,7 @@ namespace GettingTooAttached
         {
             if (Environment.TickCount64 > nextAttempt)
             {
-                if (this.Configuration.SomePropertyToBeSavedAndWithADefault)
+                if (this.Configuration.enableLooping)
                 {
                     if (this.currentMeldStage switch
                     {
