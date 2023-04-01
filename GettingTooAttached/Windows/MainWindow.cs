@@ -1,15 +1,15 @@
-using System;
-using System.Numerics;
-using Dalamud.Interface.Windowing;
+using ClickLib.Clicks;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui;
-using ImGuiNET;
-using ImGuiScene;
+using Dalamud.Interface.Windowing;
+using Dalamud.Logging;
+using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ECommons.DalamudServices;
-using ClickLib.Clicks;
-using Dalamud.Logging;
+using ImGuiNET;
+using ImGuiScene;
+using System;
+using System.Numerics;
 
 namespace GettingTooAttached.Windows;
 

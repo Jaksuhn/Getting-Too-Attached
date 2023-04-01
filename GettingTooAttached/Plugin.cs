@@ -1,18 +1,14 @@
+using Dalamud.Game;
 using Dalamud.Game.Command;
+using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
+using Dalamud.Logging;
 using Dalamud.Plugin;
-using System.Collections.Generic;
+using ECommons;
+using GettingTooAttached.Windows;
+using System;
 using System.IO;
 using System.Threading.Tasks;
-using Dalamud.Interface.Windowing;
-using GettingTooAttached.Windows;
-using ECommons;
-using ECommons.DalamudServices;
-using Dalamud.Game;
-using System;
-using FFXIVClientStructs.FFXIV.Component.GUI;
-using Dalamud.Game.ClientState.Conditions;
-using Dalamud.Logging;
 
 namespace GettingTooAttached
 {
