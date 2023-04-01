@@ -357,15 +357,20 @@ public class MainWindow : Window, IDisposable
     public unsafe override void Draw()
     {
         bool enableLooping = Configuration.enableLooping;
+        int delay = Configuration.attemptDelay;
         if (ImGui.Checkbox("Start Looping", ref enableLooping))
         {
             this.Configuration.enableLooping = enableLooping;
             this.Configuration.Save();
         }
 
-        if (ImGui.Button("Show Settings"))
+        if (ImGui.SliderInt("Set delay (ms)###ActionDelay", ref delay, 0, 3000))
         {
-            this.Plugin.DrawConfigUI();
+            if (delay < 0) delay = 0;
+            if (delay > 3000) delay = 3000;
+
+            this.Configuration.attemptDelay = delay;
+            this.Configuration.Save();
         }
 
         ImGui.Spacing();

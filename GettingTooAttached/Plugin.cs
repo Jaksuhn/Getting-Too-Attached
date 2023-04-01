@@ -24,7 +24,6 @@ namespace GettingTooAttached
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("GettingTooAttached");
 
-        private ConfigWindow ConfigWindow { get; init; }
         private MainWindow MainWindow { get; init; }
         private Task task = Task.CompletedTask;
 
@@ -39,7 +38,6 @@ namespace GettingTooAttached
         }
 
         private long nextAttempt = 0;
-        private const long attemptDelay = 1000;
 
         MeldState currentMeldStage = MeldState.OPEN_MENU;
 
@@ -60,10 +58,8 @@ namespace GettingTooAttached
             var imagePath = Path.Combine(PluginInterface.AssemblyLocation.Directory?.FullName!, "goat.png");
             var goatImage = this.PluginInterface.UiBuilder.LoadImage(imagePath);
 
-            ConfigWindow = new ConfigWindow(this);
             MainWindow = new MainWindow(this, goatImage);
 
-            WindowSystem.AddWindow(ConfigWindow);
             WindowSystem.AddWindow(MainWindow);
 
             this.CommandManager.AddHandler(main_command, new CommandInfo(OnCommand)
@@ -72,7 +68,6 @@ namespace GettingTooAttached
             });
 
             this.PluginInterface.UiBuilder.Draw += DrawUI;
-            this.PluginInterface.UiBuilder.OpenConfigUi += DrawConfigUI;
         }
 
         public unsafe void ResetMeldState()
@@ -100,7 +95,7 @@ namespace GettingTooAttached
                         this.currentMeldStage = (MeldState)(((int)this.currentMeldStage + 1) % 5);
                     }
                 }
-                nextAttempt = Environment.TickCount64 + attemptDelay;
+                nextAttempt = Environment.TickCount64 + Configuration.attemptDelay;
             }
         }
 
@@ -108,7 +103,6 @@ namespace GettingTooAttached
         {
             this.WindowSystem.RemoveAllWindows();
 
-            ConfigWindow.Dispose();
             MainWindow.Dispose();
             Framework.Update -= LoopDaemon;
 
@@ -124,11 +118,6 @@ namespace GettingTooAttached
         private void DrawUI()
         {
             this.WindowSystem.Draw();
-        }
-
-        public void DrawConfigUI()
-        {
-            ConfigWindow.IsOpen = true;
         }
     }
 }

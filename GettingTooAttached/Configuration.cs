@@ -10,6 +10,7 @@ namespace GettingTooAttached
         public int Version { get; set; } = 0;
 
         public bool enableLooping { get; set; } = false;
+        public int attemptDelay { get; set; } = 500;
 
         // the below exist just to make saving less cumbersome
         [NonSerialized]

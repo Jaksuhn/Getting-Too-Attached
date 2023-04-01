@@ -8,14 +8,15 @@ To get it to work:
 
 1. Once installed, have once piece of gear in your inventory and a materia that will not overcap a stat. The plugin does not behave correctly if you overcap.
 
-2. Open the plugin with the command `/gta`, then hit "show settings".
+2. Open the plugin with the command `/gta`.
 
 3. Tick the checkbox to start the plugin.
+
+4. Change the delay is needs be.
 
 ### NOTES
 
 -   You must start the plugin without the meld menu up to begin with.
--   Disable the plugin via unchecking the checkbox.
 -   This will target the first item that appears in the desynthesis menu, so if you have extra gear that would cap stats, take it out of your inventory if it's first.
 -   If you wish to resume, it'll start on the last step you were on when you stopped. Hit the "reset MeldState" button to set it back to the start and make sure all menus are closed again.
 -   This will loop endlessly. It does not check for when you've gotten the achievement(s).
