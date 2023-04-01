@@ -1,20 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.Numerics;
 using Dalamud.Interface.Windowing;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui;
-using Dalamud.Interface.Components;
 using ImGuiNET;
 using ImGuiScene;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ECommons.Configuration;
 using ECommons.DalamudServices;
-using static ECommons.GenericHelpers;
 using ClickLib.Clicks;
-
-using GettingTooAttached.Helpers;
 using Dalamud.Logging;
 
 namespace GettingTooAttached.Windows;
