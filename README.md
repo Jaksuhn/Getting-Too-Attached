@@ -22,7 +22,9 @@ To get it to work:
 
 ### REPO
 
-working on it
+```
+https://raw.githubusercontent.com/Jaksuhn/DalamudPlugins/main/pluginmaster.json
+```
 
 ### Special Thanks
 
