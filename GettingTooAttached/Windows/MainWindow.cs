@@ -362,20 +362,6 @@ public class MainWindow : Window, IDisposable
             this.Plugin.DrawConfigUI();
         }
 
-        // if (ImGui.DragInt("# of Loops", ref Configuration._LoopAmt, 1, 10, 100)) Configuration.Save();
-        if (ImGui.Button("Full Loop (Once)"))
-        {
-            try
-            {
-
-            }
-            catch (System.Exception)
-            {
-                throw;
-            }
-
-        }
-
         ImGui.Spacing();
 
         ImGui.Text("Debug Buttons");
@@ -408,17 +394,18 @@ public class MainWindow : Window, IDisposable
             RetrieveMateria();
         }
 
+        if (ImGui.Button("Retrieval Dialog"))
+        {
+            if (IsMateriaRetrieveDialogOpen())
+            {
+                ConfirmRetrievalDialog();
+            }
+        }
+
         if (ImGui.Button("Reset MeldState"))
         {
             Plugin.ResetMeldState();
         }
 
-        // if (ImGui.Button("Extract Dialog"))
-        // {
-        //     if (IsRetrievalMenuDialogOpen())
-        //     {
-        //         ConfirmRetrievalDialog();
-        //     }
-        // }
     }
 }
