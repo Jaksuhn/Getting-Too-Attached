@@ -12,7 +12,7 @@ To get it to work:
 
 3. Tick the checkbox to start the plugin.
 
-4. Change the delay is needs be.
+4. Change the delay as needs be.
 
 ### NOTES
 
