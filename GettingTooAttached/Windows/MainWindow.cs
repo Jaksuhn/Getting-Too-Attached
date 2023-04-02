@@ -1,12 +1,7 @@
-using ClickLib.Clicks;
-using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui;
 using Dalamud.Game.Gui.Toast;
 using Dalamud.Interface.Windowing;
-using Dalamud.Logging;
 using ECommons.DalamudServices;
-using FFXIVClientStructs.FFXIV.Client.Game;
-using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
 using ImGuiScene;
 using System;
