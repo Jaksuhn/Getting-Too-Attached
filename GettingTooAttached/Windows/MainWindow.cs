@@ -48,14 +48,14 @@ public class MainWindow : Window, IDisposable
 
         if (ImGui.SliderInt("Loop Amount", ref loops, 0, 10000))
         {
-            if (loops < 0) loops = 0;
+            if (loops < -1) loops = -1;
             if (loops > 10000) loops = 10000;
 
             this.Configuration.loopAmt = loops;
             this.Configuration.Save();
         }
 
-        if (ImGui.SliderInt("Set delay (ms)###ActionDelay", ref delay, 0, 3000))
+        if (ImGui.SliderInt("Set delay (ms)###ActionDelay", ref delay, -1, 3000))
         {
             if (delay < 0) delay = 0;
             if (delay > 3000) delay = 3000;
@@ -108,17 +108,12 @@ public class MainWindow : Window, IDisposable
         {
             Plugin.ResetMeldState();
         }
-        if (ImGui.Button("Test"))
-        {
-            // Svc.Chat.Print("[GettingTooAttached] test");
-            Svc.Toasts.ShowQuest("test", new QuestToastOptions() { PlaySound = true, DisplayCheckmark = false });
-            Plugin.PrintPluginMessage("test");
-        }
 
-        if (ImGui.Button("achievement test"))
+        if (ImGui.Button("Get Achievement Progress"))
         {
-            Modules.AchievementCheck.GoToAchievement();
-            Plugin.PrintPluginMessage("test");
+            // Modules.AchievementCheck.GoToAchievement();
+            // Svc.Toasts.ShowQuest("test", new QuestToastOptions() { PlaySound = true, DisplayCheckmark = false });
+            Plugin.PrintPluginMessage("This will get the remaining amount of melds required from your achievements. WIP.");
         }
     }
 }

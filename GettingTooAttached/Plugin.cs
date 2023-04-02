@@ -42,7 +42,8 @@ namespace GettingTooAttached
             SELECT_MATERIA = 1,
             CONFIRM_DIALOG = 2,
             RETRIEVE_MATERIA = 3,
-            RETRIEVE_DIALOG = 4
+            RETRIEVE_DIALOG = 4,
+            END
         }
 
         private long nextAttempt = 0;
@@ -88,7 +89,7 @@ namespace GettingTooAttached
         {
             if (Environment.TickCount64 > nextAttempt)
             {
-                if (this.Configuration.enableLooping)
+                if (this.Configuration.enableLooping && (this.Configuration.loopAmt > 0 || this.Configuration.loopAmt == -1))
                 {
                     if (this.currentMeldStage switch
                     {
@@ -100,7 +101,17 @@ namespace GettingTooAttached
                         MeldState.RETRIEVE_DIALOG => Meld.ConfirmRetrievalDialog()
                     })
                     {
-                        this.currentMeldStage = (MeldState)(((int)this.currentMeldStage + 1) % 5);
+                        this.currentMeldStage = (MeldState)(((int)this.currentMeldStage + 1) % 6);
+                    }
+                    if (Configuration.loopAmt != -1 && currentMeldStage == MeldState.END)
+                    {
+                        this.Configuration.loopAmt -= 1;
+                        if (this.Configuration.loopAmt == 0)
+                        {
+                            this.Configuration.enableLooping = false;
+                            ResetMeldState();
+                        }
+                        currentMeldStage = MeldState.SELECT_ITEM;
                     }
                 }
                 nextAttempt = Environment.TickCount64 + Configuration.attemptDelay;
