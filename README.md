@@ -29,4 +29,4 @@ https://raw.githubusercontent.com/Jaksuhn/DalamudPlugins/main/pluginmaster.json
 
 ### Special Thanks
 
-I barely knew C# before starting this and knew nothing about the inner workings of dalamud. Wouldn't've been possible without the teachings/guidance of Taurenkey and Ravicale.
+I barely knew C# before starting this and knew nothing about the inner workings of dalamud. Wouldn't've been possible without the teachings/guidance of [Taurenkey](https://github.com/Taurenkey/) and [Ravicale](https://github.com/Ravicale/).

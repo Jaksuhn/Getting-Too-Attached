@@ -1,14 +1,19 @@
 using Dalamud.Game;
 using Dalamud.Game.Command;
+using Dalamud.Game.Gui;
+using Dalamud.Game.Text.SeStringHandling;
+using Dalamud.Game.Text;
 using Dalamud.Interface.Windowing;
 using Dalamud.IoC;
 using Dalamud.Logging;
 using Dalamud.Plugin;
 using ECommons;
 using GettingTooAttached.Windows;
+using GettingTooAttached.Modules;
 using System;
 using System.IO;
 using System.Threading.Tasks;
+using ECommons.DalamudServices;
 
 namespace GettingTooAttached
 {
@@ -16,6 +21,7 @@ namespace GettingTooAttached
     public sealed class Plugin : IDalamudPlugin
     {
         [PluginService] public static Framework Framework { get; private set; } = null!;
+        [PluginService] public static ChatGui Chat { get; private set; } = null!;
         public string Name => "Getting Too Attached";
         private const string main_command = "/gta";
 
@@ -23,6 +29,8 @@ namespace GettingTooAttached
         private CommandManager CommandManager { get; init; }
         public Configuration Configuration { get; init; }
         public WindowSystem WindowSystem = new("GettingTooAttached");
+
+        public XivChatType MessageChannel { get; set; }
 
         private MainWindow MainWindow { get; init; }
         private Task task = Task.CompletedTask;
@@ -84,12 +92,12 @@ namespace GettingTooAttached
                 {
                     if (this.currentMeldStage switch
                     {
-                        MeldState.OPEN_MENU => MainWindow.OpenMenu(),
-                        MeldState.SELECT_ITEM => MainWindow.SelectItem(),
-                        MeldState.SELECT_MATERIA => MainWindow.SelectMateria(),
-                        MeldState.CONFIRM_DIALOG => MainWindow.ConfirmMateriaDialog(),
-                        MeldState.RETRIEVE_MATERIA => MainWindow.RetrieveMateria(),
-                        MeldState.RETRIEVE_DIALOG => MainWindow.ConfirmRetrievalDialog()
+                        MeldState.OPEN_MENU => Meld.OpenMenu(),
+                        MeldState.SELECT_ITEM => Meld.SelectItem(),
+                        MeldState.SELECT_MATERIA => Meld.SelectMateria(),
+                        MeldState.CONFIRM_DIALOG => Meld.ConfirmMateriaDialog(),
+                        MeldState.RETRIEVE_MATERIA => Meld.RetrieveMateria(),
+                        MeldState.RETRIEVE_DIALOG => Meld.ConfirmRetrievalDialog()
                     })
                     {
                         this.currentMeldStage = (MeldState)(((int)this.currentMeldStage + 1) % 5);
@@ -97,6 +105,19 @@ namespace GettingTooAttached
                 }
                 nextAttempt = Environment.TickCount64 + Configuration.attemptDelay;
             }
+        }
+
+        public void PrintPluginMessage(String msg)
+        {
+            var message = new XivChatEntry
+            {
+                Message = new SeStringBuilder()
+                .AddUiForeground($"[GettingTooAttached] ", 45)
+                .AddUiForeground(msg, 576)
+                .Build()
+            };
+
+            Svc.Chat.PrintChat(message);
         }
 
         public void Dispose()
