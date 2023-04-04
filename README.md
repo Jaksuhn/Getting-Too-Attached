@@ -1,6 +1,6 @@
 # GettingTooAttached
 
-This plugin is design to get you the Getting Too Attached achievements.
+This plugin is designed to get you the Getting Too Attached achievements.
 
 Right now it's not user friendly/super intuitive, but I'll work on that and update this ReadMe accordingly.
 

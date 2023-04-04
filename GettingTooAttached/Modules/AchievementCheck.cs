@@ -9,8 +9,10 @@ using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Component.GUI;
 using ImGuiNET;
 using ImGuiScene;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Numerics;
+using System.Runtime.InteropServices;
 
 namespace GettingTooAttached.Modules;
 
@@ -69,29 +71,28 @@ public class AchievementCheck
                     return false;
 
 
-                var SelectItemsvalues = stackalloc AtkValue[4];
-                SelectItemsvalues[0] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
-                    UInt = 0,
-                };
-                SelectItemsvalues[1] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int,
-                    Int = 0,
-                };
-                SelectItemsvalues[2] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
-                    UInt = 27,
-                };
-                SelectItemsvalues[3] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
-                    UInt = 4,
-                };
-
-                achievementWindow->FireCallback(1, SelectItemsvalues);
+                // var SelectItemsvalues = stackalloc AtkValue[4];
+                // SelectItemsvalues[0] = new()
+                // {
+                //     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
+                //     UInt = 0,
+                // };
+                // SelectItemsvalues[1] = new()
+                // {
+                //     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int,
+                //     Int = 0,
+                // };
+                // SelectItemsvalues[2] = new()
+                // {
+                //     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
+                //     UInt = 27,
+                // };
+                // SelectItemsvalues[3] = new()
+                // {
+                //     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
+                //     UInt = 4,
+                // };
+                // achievementWindow->FireCallback(1, SelectItemsvalues);
 
                 var SelectMateriavalues = stackalloc AtkValue[4];
                 SelectMateriavalues[0] = new()
@@ -114,32 +115,31 @@ public class AchievementCheck
                     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
                     UInt = 4,
                 };
-
                 achievementWindow->FireCallback(1, SelectMateriavalues);
 
-                var SelectGTAVIvalues = stackalloc AtkValue[4];
-                SelectGTAVIvalues[0] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
-                    UInt = 1,
-                };
-                SelectGTAVIvalues[1] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int,
-                    Int = 0,
-                };
-                SelectGTAVIvalues[2] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
-                    UInt = 7,
-                };
-                SelectGTAVIvalues[3] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int,
-                    Int = 0,
-                };
+                // var SelectGTAvalues = stackalloc AtkValue[4];
+                // SelectGTAvalues[0] = new()
+                // {
+                //     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
+                //     UInt = 1,
+                // };
+                // SelectGTAvalues[1] = new()
+                // {
+                //     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int,
+                //     Int = 0,
+                // };
+                // SelectGTAvalues[2] = new()
+                // {
+                //     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
+                //     UInt = 7,
+                // };
+                // SelectGTAvalues[3] = new()
+                // {
+                //     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int,
+                //     Int = 0,
+                // };
+                // achievementWindow->FireCallback(1, SelectGTAvalues);
 
-                achievementWindow->FireCallback(1, SelectGTAVIvalues);
                 PluginLog.Log("Finding Getting Too Attached VII Progress");
                 return true;
             }
@@ -149,5 +149,20 @@ public class AchievementCheck
             }
         }
         return false;
+    }
+
+    public static unsafe string GetGTAProgress()
+    {
+        try
+        {
+            var addon = (AtkUnitBase*)Svc.GameGui.GetAddonByName("Achievement");
+            var progress = addon->AtkValues[3347];
+            return Marshal.PtrToStringUTF8(new nint(progress.String)) ?? "Unable to Get Achievement Progress";
+        }
+        catch (Exception e)
+        {
+            PluginLog.Log("[GettingTooAttached] Unable to Get Achievement Progress. " + e.ToString());
+            return "Unable to Get Achievement Progress";
+        }
     }
 }

@@ -36,7 +36,6 @@ public class Meld
             try
             {
                 ActionManager.Instance()->UseAction(ActionType.General, 13);
-                PluginLog.Log("open menu");
                 return true;
             }
             catch
@@ -87,7 +86,6 @@ public class Meld
                 };
 
                 materalizeWindow->FireCallback(1, SelectItemvalues);
-                PluginLog.Log("selectitem");
                 return true;
             }
             catch
@@ -137,7 +135,6 @@ public class Meld
                 };
 
                 materalizeWindow->FireCallback(1, SelectMateriavalues);
-                PluginLog.Log("selectmateria");
                 return true;
             }
             catch
@@ -184,7 +181,6 @@ public class Meld
 
                 meldDialogWindow->FireCallback(1, MeldDialogvalues);
                 meldDialogWindow->Close(true);
-                PluginLog.Log("materiaattachdialog");
                 return true;
             }
             catch (Exception e)
@@ -299,7 +295,6 @@ public class Meld
                 };
 
                 contextWindow->FireCallback(1, RetrieveCallback);
-                PluginLog.Log("retrievemateria");
                 return true;
             }
             catch
@@ -326,7 +321,6 @@ public class Meld
                 PluginLog.Log(retrievePTR.ToString());
 
                 ClickMateriaRetrieveDialog.Using(retrievePTR).Begin();
-                PluginLog.Log("retrievaldialog");
                 return true;
             }
             catch (Exception e)

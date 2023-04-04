@@ -46,7 +46,7 @@ public class MainWindow : Window, IDisposable
             this.Configuration.Save();
         }
 
-        if (ImGui.SliderInt("Loop Amount", ref loops, 0, 10000))
+        if (ImGui.SliderInt("Loop Amount", ref loops, -1, 10000))
         {
             if (loops < -1) loops = -1;
             if (loops > 10000) loops = 10000;
@@ -109,11 +109,22 @@ public class MainWindow : Window, IDisposable
             Plugin.ResetMeldState();
         }
 
+        if (ImGui.Button("Tie Loops to Achievement"))
+        {
+            // Modules.AchievementCheck.GoToAchievement();
+            var progress = Modules.AchievementCheck.GetGTAProgress();
+            progress = progress.Replace(",", "");
+            string[] nums = progress.Split('/');
+            var remaining = Convert.ToInt32(nums[1]) - Convert.ToInt32(nums[0]);
+            this.Configuration.loopAmt = remaining;
+        }
+
         if (ImGui.Button("Get Achievement Progress"))
         {
             // Modules.AchievementCheck.GoToAchievement();
             // Svc.Toasts.ShowQuest("test", new QuestToastOptions() { PlaySound = true, DisplayCheckmark = false });
             Plugin.PrintPluginMessage("This will get the remaining amount of melds required from your achievements. WIP.");
+            Modules.AchievementCheck.GoToAchievement();
         }
     }
 }
