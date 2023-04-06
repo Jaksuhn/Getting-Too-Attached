@@ -18,9 +18,6 @@ public class MeldingDaemon
     }
 
     private long nextAttempt = 0;
-    // internal int loopAmt = 10000;
-    // internal int attemptDelay = 500;
-    // internal bool enableLooping = false;
     MeldState currentMeldStage = MeldState.OPEN_MENU;
 
     public MeldingDaemon() : this(new Configuration()) { }

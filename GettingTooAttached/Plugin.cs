@@ -15,7 +15,7 @@ namespace GettingTooAttached
 
     public sealed class Plugin : IDalamudPlugin
     {
-        public string Name => "LazyToolBox";
+        public string Name => "LazyToolbox";
         public Configuration Configuration { get; init; }
         private Commands Commands { get; }
         public WindowSystem WindowSystem = new("GettingTooAttached");

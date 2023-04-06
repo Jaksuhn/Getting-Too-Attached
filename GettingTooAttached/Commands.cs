@@ -12,7 +12,7 @@ namespace GettingTooAttached
         {
             Plugin = plugin;
 
-            Service.CommandManager.AddHandler("/ltb", new CommandInfo(OnCommand)
+            Service.CommandManager.AddHandler("/lt", new CommandInfo(OnCommand)
             {
                 HelpMessage = $"Toggle visibility of the {Plugin.Name} window",
             });
@@ -20,7 +20,7 @@ namespace GettingTooAttached
 
         public void Dispose()
         {
-            Service.CommandManager.RemoveHandler("/ltb");
+            Service.CommandManager.RemoveHandler("/lt");
         }
 
         private void OnCommand(string command, string arguments) => Plugin.ToggleMainWindow();
