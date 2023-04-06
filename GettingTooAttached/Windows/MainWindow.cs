@@ -1,7 +1,10 @@
 using Dalamud.Game.Gui;
 using Dalamud.Game.Gui.Toast;
 using Dalamud.Interface.Windowing;
+using Dalamud.Logging;
 using ECommons.DalamudServices;
+using GettingTooAttached.Modules;
+using GettingTooAttached.Modules.Daemons;
 using ImGuiNET;
 using ImGuiScene;
 using System;
@@ -11,13 +14,13 @@ namespace GettingTooAttached.Windows;
 
 public class MainWindow : Window, IDisposable
 {
-    private TextureWrap GoatImage;
     private Plugin Plugin;
 
     private Configuration Configuration;
     internal static GameGui GameGui { get; private set; } = null!;
+    private bool visible;
 
-    public MainWindow(Plugin plugin, TextureWrap goatImage) : base(
+    public MainWindow(Plugin plugin) : base(
         "Getting Too Attached", ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse)
     {
         this.SizeConstraints = new WindowSizeConstraints
@@ -26,17 +29,19 @@ public class MainWindow : Window, IDisposable
             MaximumSize = new Vector2(float.MaxValue, float.MaxValue)
         };
 
-        this.GoatImage = goatImage;
         this.Plugin = plugin;
-        this.Configuration = plugin.Configuration;
+        this.Configuration = Service.Configuration;
     }
+
+    internal void Toggle() { this.visible ^= true; }
 
     public void Dispose()
     {
-        this.GoatImage.Dispose();
     }
     public unsafe override void Draw()
     {
+        if (this.Configuration == null) { return; }
+        if (!this.visible) { return; }
         bool enableLooping = Configuration.enableLooping;
         int delay = Configuration.attemptDelay;
         int loops = Configuration.loopAmt;
@@ -55,7 +60,7 @@ public class MainWindow : Window, IDisposable
             this.Configuration.Save();
         }
 
-        if (ImGui.SliderInt("Set delay (ms)###ActionDelay", ref delay, -1, 3000))
+        if (ImGui.SliderInt("Set delay (ms)", ref delay, -1, 3000))
         {
             if (delay < 0) delay = 0;
             if (delay > 3000) delay = 3000;
@@ -106,13 +111,12 @@ public class MainWindow : Window, IDisposable
 
         if (ImGui.Button("Reset MeldState"))
         {
-            Plugin.ResetMeldState();
         }
 
         if (ImGui.Button("Tie Loops to Achievement"))
         {
             // Modules.AchievementCheck.GoToAchievement();
-            var progress = Modules.AchievementCheck.GetGTAProgress();
+            var progress = AchievementCheck.GetGTAProgress();
             progress = progress.Replace(",", "");
             string[] nums = progress.Split('/');
             var remaining = Convert.ToInt32(nums[1]) - Convert.ToInt32(nums[0]);
@@ -124,7 +128,18 @@ public class MainWindow : Window, IDisposable
             // Modules.AchievementCheck.GoToAchievement();
             // Svc.Toasts.ShowQuest("test", new QuestToastOptions() { PlaySound = true, DisplayCheckmark = false });
             Plugin.PrintPluginMessage("This will get the remaining amount of melds required from your achievements. WIP.");
-            Modules.AchievementCheck.GoToAchievement();
+            AchievementCheck.GoToAchievement();
+        }
+
+        if (ImGui.Button("schedule a knife"))
+        {
+            IslandWorkshop.OpenAgenda(1);
+            IslandWorkshop.Schedule("Isleworks Culinary Knife");
+        }
+
+        if (ImGui.Button("dispose all"))
+        {
+            Plugin.Dispose();
         }
     }
 }

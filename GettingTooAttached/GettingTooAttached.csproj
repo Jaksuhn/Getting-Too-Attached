@@ -41,6 +41,7 @@
     <PackageReference Include="ClickLib" Version="1.2.0.1" />
     <PackageReference Include="DalamudPackager" Version="2.1.11" />
     <PackageReference Include="ECommons" Version="2.0.0.4" />
+    <PackageReference Include="System.Collections" Version="4.3.0" />
     <Reference Include="FFXIVClientStructs">
       <HintPath>$(DalamudLibPath)FFXIVClientStructs.dll</HintPath>
       <Private>false</Private>

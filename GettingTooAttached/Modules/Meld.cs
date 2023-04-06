@@ -11,12 +11,14 @@ using ImGuiNET;
 using ImGuiScene;
 using System;
 using System.Numerics;
+using GettingTooAttached.Windows;
 
 namespace GettingTooAttached.Modules;
 
 public class Meld
 {
-
+    internal static MateriaMelding Window;
+    internal static bool Enabled = false;
     internal static GameGui GameGui { get; private set; } = null!;
 
     public Meld() { }

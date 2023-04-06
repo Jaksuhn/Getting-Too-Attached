@@ -22,13 +22,9 @@ public class AchievementCheck
     private Configuration Configuration;
     internal static GameGui GameGui { get; private set; } = null!;
 
-    public AchievementCheck()
-    {
-    }
+    public AchievementCheck() { }
 
-    public void Dispose()
-    {
-    }
+    public void Dispose() { }
 
     public static unsafe bool IsAddonReady(AtkUnitBase* addon)
     {
