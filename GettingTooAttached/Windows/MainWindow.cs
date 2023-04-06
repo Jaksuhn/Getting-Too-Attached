@@ -1,12 +1,8 @@
 using Dalamud.Game.Gui;
-using Dalamud.Game.Gui.Toast;
 using Dalamud.Interface.Windowing;
 using Dalamud.Logging;
-using ECommons.DalamudServices;
 using GettingTooAttached.Modules;
-using GettingTooAttached.Modules.Daemons;
 using ImGuiNET;
-using ImGuiScene;
 using System;
 using System.Numerics;
 
@@ -49,6 +45,7 @@ public class MainWindow : Window, IDisposable
         if (ImGui.Checkbox("Start Looping", ref enableLooping))
         {
             this.Configuration.enableLooping = enableLooping;
+            Plugin.PrintPluginMessage($"[{Plugin.Name}] checkbox value = {Configuration.enableLooping}");
             this.Configuration.Save();
         }
 
@@ -74,41 +71,41 @@ public class MainWindow : Window, IDisposable
 
         ImGui.Text("Debug Buttons");
 
-        // if (ImGui.Button("Open Materia"))
-        // {
-        //     ActionManager.Instance()->UseAction(ActionType.General, 13);
-        // }
+        if (ImGui.Button("Open Materia"))
+        {
+            Meld.OpenMenu();
+        }
 
-        // if (ImGui.Button("Target gear"))
-        // {
-        //     SelectItem();
-        // }
+        if (ImGui.Button("Target gear"))
+        {
+            Meld.SelectItem();
+        }
 
-        // if (ImGui.Button("Select Materia"))
-        // {
-        //     SelectMateria();
-        // }
+        if (ImGui.Button("Select Materia"))
+        {
+            Meld.SelectMateria();
+        }
 
-        // if (ImGui.Button("Meld Materia Dialog"))
-        // {
-        //     if (IsMateriaMenuDialogOpen())
-        //     {
-        //         ConfirmMateriaDialog();
-        //     }
-        // }
+        if (ImGui.Button("Meld Materia Dialog"))
+        {
+            if (Meld.IsMateriaMenuDialogOpen())
+            {
+                Meld.ConfirmMateriaDialog();
+            }
+        }
 
-        // if (ImGui.Button("Extract Materia"))
-        // {
-        //     RetrieveMateria();
-        // }
+        if (ImGui.Button("Extract Materia"))
+        {
+            Meld.RetrieveMateria();
+        }
 
-        // if (ImGui.Button("Retrieval Dialog"))
-        // {
-        //     if (IsMateriaRetrieveDialogOpen())
-        //     {
-        //         ConfirmRetrievalDialog();
-        //     }
-        // }
+        if (ImGui.Button("Retrieval Dialog"))
+        {
+            if (Meld.IsMateriaRetrieveDialogOpen())
+            {
+                Meld.ConfirmRetrievalDialog();
+            }
+        }
 
         // if (ImGui.Button("Reset MeldState"))
         // {

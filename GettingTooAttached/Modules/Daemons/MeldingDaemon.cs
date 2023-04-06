@@ -1,3 +1,4 @@
+using Dalamud.Logging;
 using FFXIVClientStructs.FFXIV.Client.System.Framework;
 using System;
 

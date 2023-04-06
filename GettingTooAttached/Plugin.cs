@@ -40,7 +40,7 @@ namespace GettingTooAttached
             Service.Interface.UiBuilder.Draw += this.Draw;
             Service.Interface.UiBuilder.OpenConfigUi += this.ToggleMainWindow;
 
-            MeldingDaemon = new MeldingDaemon();
+            MeldingDaemon = new MeldingDaemon(Service.Configuration);
             Service.Framework.Update += MeldingDaemon.LoopDaemon;
         }
 
@@ -69,6 +69,7 @@ namespace GettingTooAttached
         public void Dispose()
         {
             Service.Interface.UiBuilder.Draw -= this.Draw;
+            Service.Framework.Update -= MeldingDaemon.LoopDaemon;
             this.Commands.Dispose();
         }
     }
