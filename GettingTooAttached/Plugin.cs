@@ -18,8 +18,6 @@ namespace GettingTooAttached
         public string Name => "LazyToolbox";
         public Configuration Configuration { get; init; }
         private Commands Commands { get; }
-        public WindowSystem WindowSystem = new("GettingTooAttached");
-
         private MainWindow MainWindow { get; init; }
         private MateriaMelding MateriaMelding { get; }
         private MeldingDaemon MeldingDaemon { get; }
@@ -38,8 +36,6 @@ namespace GettingTooAttached
             ECommonsMain.Init(pluginInterface, this);
 
             this.MainWindow = new MainWindow(this);
-
-            WindowSystem.AddWindow(MainWindow);
 
             Service.Interface.UiBuilder.Draw += this.Draw;
             Service.Interface.UiBuilder.OpenConfigUi += this.ToggleMainWindow;
@@ -74,7 +70,6 @@ namespace GettingTooAttached
         {
             Service.Interface.UiBuilder.Draw -= this.Draw;
             this.Commands.Dispose();
-            this.WindowSystem.RemoveAllWindows();
         }
     }
 }

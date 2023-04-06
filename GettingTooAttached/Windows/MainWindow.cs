@@ -42,6 +42,7 @@ public class MainWindow : Window, IDisposable
     {
         if (this.Configuration == null) { return; }
         if (!this.visible) { return; }
+        // ImGui.Spacing();
         bool enableLooping = Configuration.enableLooping;
         int delay = Configuration.attemptDelay;
         int loops = Configuration.loopAmt;
@@ -109,9 +110,10 @@ public class MainWindow : Window, IDisposable
         //     }
         // }
 
-        if (ImGui.Button("Reset MeldState"))
-        {
-        }
+        // if (ImGui.Button("Reset MeldState"))
+        // {
+        //     new MeldingDaemon.ResetMeldState();
+        // }
 
         if (ImGui.Button("Tie Loops to Achievement"))
         {
