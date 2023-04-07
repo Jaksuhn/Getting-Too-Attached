@@ -1,27 +1,29 @@
-using ClickLib.Clicks;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Gui;
-using Dalamud.Game.Gui.Toast;
-using Dalamud.Interface.Windowing;
 using Dalamud.Logging;
 using ECommons.DalamudServices;
 using FFXIVClientStructs.FFXIV.Client.Game;
 using FFXIVClientStructs.FFXIV.Component.GUI;
-using ImGuiNET;
-using ImGuiScene;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Numerics;
-using System.Runtime.InteropServices;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace GettingTooAttached.Modules;
 
 public class IslandWorkshop
 {
 
-    private Configuration Configuration;
+    public Configuration Configuration;
     internal static GameGui GameGui { get; private set; } = null!;
+    private static object agendaLock = new object();
+
+    private enum ScheduleState
+    {
+        OPEN_AGENDA = 0,
+        SCHEDULE = 1,
+    }
 
     class ItemValues
     {
@@ -166,62 +168,69 @@ public class IslandWorkshop
         return false;
     }
 
-    public static unsafe bool OpenAgenda(int workshop)
+    private static unsafe bool OpenAgenda(int index, ItemValues key, int workshop, int prevHours)
     {
-        var addon = (AtkUnitBase*)Svc.GameGui.GetAddonByName("MJICraftSchedule");
-        if (isWorkshopOpen() && IsAddonReady(addon))
+        lock (agendaLock)
         {
-            try
+            var addon = (AtkUnitBase*)Svc.GameGui.GetAddonByName("MJICraftSchedule");
+            if (isWorkshopOpen() && IsAddonReady(addon))
             {
-                var workshopPTR = Svc.GameGui.GetAddonByName("MJICraftSchedule");
-                if (workshopPTR == IntPtr.Zero)
-                    return false;
-
-                var workshopWindow = (AtkUnitBase*)workshopPTR;
-                if (workshopWindow == null)
-                    return false;
-
-
-                var SelectAgenda = stackalloc AtkValue[3];
-                SelectAgenda[0] = new()
+                try
                 {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int,
-                    Int = 16,
-                };
-                SelectAgenda[1] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
-                    UInt = (uint)(workshop - 1),
-                };
-                SelectAgenda[1] = new()
-                {
-                    Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
-                    UInt = (uint)(workshop - 1),
-                };
-                workshopWindow->FireCallback(1, SelectAgenda);
+                    var workshopPTR = Svc.GameGui.GetAddonByName("MJICraftSchedule");
+                    if (workshopPTR == IntPtr.Zero)
+                        return false;
 
-                return true;
+                    var workshopWindow = (AtkUnitBase*)workshopPTR;
+                    if (workshopWindow == null)
+                        return false;
+
+
+                    var SelectAgenda = stackalloc AtkValue[3];
+                    SelectAgenda[0] = new()
+                    {
+                        Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int,
+                        Int = 16,
+                    };
+                    SelectAgenda[1] = new()
+                    {
+                        Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
+                        UInt = (uint)(workshop - 1),
+                    };
+                    SelectAgenda[1] = new()
+                    {
+                        Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
+                        UInt = (uint)(index == 0 ? 0 : prevHours),
+                    };
+                    workshopWindow->FireCallback(1, SelectAgenda);
+
+                    return true;
+                }
+                catch
+                {
+                    PluginLog.Log("[GettingTooAttached] Failed to open agenda for workshop " + workshop);
+                }
             }
-            catch
-            {
-                PluginLog.Log("[GettingTooAttached] Failed to open agenda for workshop " + workshop);
-            }
+            return false;
         }
-        return false;
     }
 
-    public static unsafe bool Schedule(String key)
+    private static unsafe bool Schedule(ItemValues key, int workshop)
     {
-        var item = workshopItems.TryGetValue(key, out var itemValues) ? itemValues : null;
-        var addon = (AtkUnitBase*)Svc.GameGui.GetAddonByName("MJICraftScheduleSetting");
-        if (IsAddonReady(addon))
+        // PluginLog.Log("[LT] b4 open");
+        // OpenAgenda(i, items[i], workshop, prevHours);
+        // PluginLog.Log("[LT] af open");
+        // prevHours = items[i].hours;
+        var addon = Svc.GameGui.GetAddonByName("MJICraftSchedule");
+        if (addon == IntPtr.Zero)
+            return false;
+        if (IsAddonReady((AtkUnitBase*)addon))
         {
             try
             {
                 var schedulerPTR = Svc.GameGui.GetAddonByName("MJICraftScheduleSetting");
                 if (schedulerPTR == IntPtr.Zero)
                     return false;
-
                 var schedulerWindow = (AtkUnitBase*)schedulerPTR;
                 if (schedulerWindow == null)
                     return false;
@@ -235,7 +244,7 @@ public class IslandWorkshop
                 SelectItem[1] = new()
                 {
                     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.UInt,
-                    UInt = item.id,
+                    UInt = key.id,
                 };
                 schedulerWindow->FireCallback(1, SelectItem);
 
@@ -245,16 +254,100 @@ public class IslandWorkshop
                     Type = FFXIVClientStructs.FFXIV.Component.GUI.ValueType.Int,
                     Int = 13,
                 };
+                PluginLog.Log("[LT] fire sched");
                 schedulerWindow->FireCallback(1, Schedule);
                 schedulerWindow->Close(true);
-
-                return true;
             }
             catch
             {
-                PluginLog.Log("[GettingTooAttached] Failed to schedule");
+                PluginLog.Log("[LT] Failed to schedule");
             }
         }
-        return false;
+        return true;
+    }
+
+    private static async Task<bool> OpenAgendaAsync(int index, ItemValues item, int workshop, int prevHours)
+    {
+        OpenAgenda(index, item, workshop, prevHours);
+        PluginLog.Log("t ag");
+        return true;
+    }
+
+    private static async Task<bool> ScheduleAsync(ItemValues item, int workshop)
+    {
+        Schedule(item, workshop);
+        PluginLog.Log("t sch");
+        return true;
+    }
+
+    private static async Task<bool> Enqueue(Func<Task> taskFunc)
+    {
+        SemaphoreSlim throttler = new SemaphoreSlim(1);
+        await throttler.WaitAsync();
+        try
+        {
+            await taskFunc();
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+        finally
+        {
+            throttler.Release();
+        }
+    }
+
+    public static async void WorkshopLooper(List<string> keys, int workshop)
+    {
+        ScheduleState currentStage = ScheduleState.OPEN_AGENDA;
+        List<ItemValues> items = new List<ItemValues>();
+        foreach (string key in keys)
+        {
+            if (workshopItems.TryGetValue(key, out var itemValues))
+            {
+                items.Add(itemValues);
+            }
+        }
+        long nextAttempt = 0;
+        int totalHours = 0;
+        int prevHours = 0;
+        var taskList = new List<Func<Task<bool>>>();
+        for (int i = 0; i < items.Count; i++)
+        {
+            //await throttler.WaitAsync();
+            if (totalHours <= 24)
+            {
+                Func<Task> taskFunc = currentStage switch
+                {
+                    ScheduleState.OPEN_AGENDA => taskList.Add(() => Enqueue(() => OpenAgendaAsync(i, items[i], workshop, prevHours))),
+                    ScheduleState.SCHEDULE => taskList.Add(() => Enqueue(() => ScheduleAsync(items[i], workshop))),
+                    _ => false
+                };
+                currentStage = (ScheduleState)(((int)currentStage + 1) % 2);
+
+                // if (currentStage switch
+                // {
+                //     ScheduleState.OPEN_AGENDA => tasks.Add(Enqueue(() => OpenAgendaAsync(i, items[i], workshop, prevHours))),
+                //     ScheduleState.SCHEDULE => tasks.Add(Enqueue(() => ScheduleAsync(items[i], workshop)))
+                // })
+                // {
+                //     currentStage = (ScheduleState)(((int)currentStage + 1) % 6);
+                // }
+                // switch (currentStage)
+                // {
+                //     case ScheduleState.OPEN_AGENDA:
+                //         tasks.Add(Enqueue(() => OpenAgendaAsync(i, items[i], workshop, prevHours)));
+                //     case ScheduleState.SCHEDULE:
+                //         tasks.Add(Enqueue(() => ScheduleAsync(items[i], workshop)));
+                // }
+                // currentStage = (ScheduleState)(((int)currentStage) % 2);
+            }
+            prevHours = items[i].hours;
+            totalHours += prevHours;
+            // throttler.Release();
+        }
+        var results = await Task.WhenAll(taskList.Select(t => t()));
     }
 }

@@ -12,6 +12,7 @@ namespace GettingTooAttached
         public bool enableLooping { get; set; } = false;
         public int attemptDelay { get; set; } = 500;
         public int loopAmt { get; set; } = 500;
+        public bool EnableWorkshopModule { get; set; } = false;
 
         // the below exist just to make saving less cumbersome
         [NonSerialized]

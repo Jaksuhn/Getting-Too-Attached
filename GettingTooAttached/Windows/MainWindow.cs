@@ -4,6 +4,7 @@ using Dalamud.Logging;
 using GettingTooAttached.Modules;
 using ImGuiNET;
 using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace GettingTooAttached.Windows;
@@ -130,10 +131,19 @@ public class MainWindow : Window, IDisposable
             AchievementCheck.GoToAchievement();
         }
 
-        if (ImGui.Button("schedule a knife"))
+        if (ImGui.Button("Overseals Casuals lol"))
         {
-            IslandWorkshop.OpenAgenda(1);
-            IslandWorkshop.Schedule("Isleworks Culinary Knife");
+            List<string> keys = new() {
+                "Isleworks Rope",
+                "Isleworks Tunic",
+                "Isleworks Spruce Round Shield",
+                "Isleworks Tunic"
+            };
+            IslandWorkshop.WorkshopLooper(keys, 1);
+            // IslandWorkshop.Schedule("Isleworks Rope");
+            // IslandWorkshop.Schedule("Isleworks Tunic");
+            // IslandWorkshop.Schedule("Isleworks Spruce Round Shield");
+            // IslandWorkshop.Schedule("Isleworks Tunic");
         }
 
         if (ImGui.Button("dispose all"))
