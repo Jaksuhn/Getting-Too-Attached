@@ -1,3 +1,5 @@
+I have moved over GettingTooAttached (and made quite a few other features!) to [Pandora's Box](https://github.com/PunishXIV/PandorasBox) (GTA is specifically on a custom branch and isn't in the main version, for now). If you use the new version, it adds a button to the melding menu. It still loops endlessly but the resume bug was fixed.
+
 # GettingTooAttached
 
 This plugin is designed to get you the Getting Too Attached achievements.
